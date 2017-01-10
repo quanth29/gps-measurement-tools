@@ -114,6 +114,26 @@
             android:layout_marginTop="15dp"
             android:text="@string/nmea_label" />
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:id="@+id/register_sensor_label" />
+        <Switch
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_sensor"
+            android:singleLine="true"
+            android:layout_marginTop="15dp"
+            android:text="@string/sensor_label" />
+    </LinearLayout>
        
  <LinearLayout
         android:orientation="horizontal"

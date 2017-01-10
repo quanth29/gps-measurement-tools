@@ -17,6 +17,10 @@
 package com.google.android.apps.location.gps.gnsslogger;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
 import android.location.GnssStatus;
@@ -45,9 +49,11 @@ public class GnssContainer {
     private boolean mLogMeasurements = true;
     private boolean mLogStatuses = true;
     private boolean mLogNmeas = true;
+    private boolean mLogSensor = true;
 
     private final List<GnssListener> mLoggers;
 
+    private final SensorManager mSensorManager;
     private final LocationManager mLocationManager;
     private final LocationListener mLocationListener =
             new LocationListener() {
@@ -159,9 +165,31 @@ public class GnssContainer {
                 }
             };
 
+    private final SensorEventListener sensorEventListener =
+            new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    if (mLogSensor) {
+                        for (GnssListener logger : mLoggers) {
+                            logger.onSensorChanged(sensorEvent);
+                        }
+                    }
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+                    if (mLogSensor) {
+                        for (GnssListener logger : mLoggers) {
+                            logger.onAccuracyChanged(sensor, i);
+                        }
+                    }
+                }
+            };
+
     public GnssContainer(Context context, GnssListener... loggers) {
         this.mLoggers = Arrays.asList(loggers);
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
     }
 
     public LocationManager getLocationManager() {
@@ -271,6 +299,7 @@ public class GnssContainer {
         registerNavigation();
         registerGnssStatus();
         registerNmea();
+        registerSensor();
     }
 
     public void unregisterAll() {
@@ -285,5 +314,24 @@ public class GnssContainer {
         for (GnssListener logger : mLoggers) {
             logger.onListenerRegistration(listener, result);
         }
+    }
+
+    public void registerSensor() {
+        registerAccelerometer();
+        registerGyroscope();
+    }
+
+    private void registerAccelerometer(){
+        Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(sensorEventListener, sensor,SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void registerGyroscope(){
+        Sensor sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mSensorManager.registerListener(sensorEventListener, sensor,SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void unregisterSensor() {
+        mSensorManager.unregisterListener(sensorEventListener);
     }
 }

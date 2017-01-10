@@ -160,6 +160,29 @@ public class SettingsFragment extends Fragment {
                     }
                 });
 
+        final Switch registerSensor = (Switch) view.findViewById(R.id.register_nmea);
+        final TextView registerSensorLabel = (TextView) view.findViewById(R.id.register_sensor_label);
+        //set the switch to OFF
+        registerSensor.setChecked(false);
+        registerSensorLabel.setText("Switch is OFF");
+        registerSensor.setOnCheckedChangeListener(
+                new OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        if (isChecked) {
+                            mGpsContainer.registerSensor();
+                            registerNmeaLabel.setText("Switch is ON");
+                        } else {
+                            mGpsContainer.unregisterSensor();
+                            registerNmeaLabel.setText("Switch is OFF");
+                        }
+                    }
+                });
+
+
+
         Button help = (Button) view.findViewById(R.id.help);
         helpDialog = new HelpDialog(getContext());
         helpDialog.setTitle("Help contents");

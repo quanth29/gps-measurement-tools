@@ -16,6 +16,8 @@
 
 package com.google.android.apps.location.gps.gnsslogger;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
 import android.location.GnssStatus;
@@ -55,4 +57,7 @@ public interface GnssListener {
     void onListenerRegistration(String listener, boolean result);
     /** @see OnNmeaMessageListener#onNmeaMessage(String, long) */
     void onNmeaReceived(long l, String s);
+
+    void onSensorChanged(SensorEvent sensorEvent);
+    void onAccuracyChanged(Sensor sensor, int sensorType);
 }

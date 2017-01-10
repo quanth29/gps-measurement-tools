@@ -17,6 +17,8 @@
 package com.google.android.apps.location.gps.gnsslogger;
 
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
 import android.location.GnssStatus;
@@ -100,6 +102,25 @@ public class UiLogger implements GnssListener {
     @Override
     public void onNmeaReceived(long timestamp, String s) {
         logNmeaEvent(String.format("onNmeaReceived: timestamp=%d, %s", timestamp, s));
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        switch (sensorEvent.sensor.getType()){
+            case Sensor.TYPE_ACCELEROMETER:
+                logEvent("ACCELEROMETER","onSensorChanged_ACCELEROMETER", USED_COLOR);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                logEvent("ACCELEROMETER","onSensorChanged_GYRO", USED_COLOR);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int sensorType) {
+
     }
 
     @Override
