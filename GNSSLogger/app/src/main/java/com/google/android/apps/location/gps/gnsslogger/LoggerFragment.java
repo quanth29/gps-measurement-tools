@@ -37,7 +37,7 @@ public class LoggerFragment extends Fragment {
 
     private TextView mLogView;
     private ScrollView mScrollView;
-    private FileLogger mFileLogger;
+    private NewFileLogger  mFileLogger;
     private UiLogger mUiLogger;
 
     private final UIFragmentComponent mUiComponent = new UIFragmentComponent();
@@ -46,7 +46,7 @@ public class LoggerFragment extends Fragment {
         mUiLogger = value;
     }
 
-    public void setFileLogger(FileLogger value) {
+    public void setFileLogger(NewFileLogger value) {
         mFileLogger = value;
     }
 
@@ -61,7 +61,7 @@ public class LoggerFragment extends Fragment {
         if (currentUiLogger != null) {
             currentUiLogger.setUiFragmentComponent(mUiComponent);
         }
-        FileLogger currentFileLogger = mFileLogger;
+        NewFileLogger currentFileLogger = mFileLogger;
         if (currentFileLogger != null) {
             currentFileLogger.setUiComponent(mUiComponent);
         }
@@ -114,7 +114,7 @@ public class LoggerFragment extends Fragment {
                         startLog.setEnabled(true);
                         sendFile.setEnabled(false);
                         Toast.makeText(getContext(), "Sending file...", Toast.LENGTH_LONG).show();
-                        mFileLogger.send();
+                        mFileLogger.stopLogFile();
                     }
                 });
 

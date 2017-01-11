@@ -65,10 +65,7 @@ public class FileLogger implements GnssListener {
 
     private final Object mFileLock = new Object();
     private BufferedWriter mFileWriter;
-    private BufferedWriter mFileImuWriter;
     private File mFile;
-    private File mImuFile;
-
 
     private UIFragmentComponent mUiComponent;
 
@@ -94,7 +91,6 @@ public class FileLogger implements GnssListener {
             if (Environment.MEDIA_MOUNTED.equals(state)) {
                 baseDirectory = new File(Environment.getExternalStorageDirectory(), FILE_PREFIX);
                 baseDirectory.mkdirs();
-                logError("File : " + baseDirectory.getAbsolutePath());
             } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
                 logError("Cannot write to external storage.");
                 return;
@@ -105,21 +101,12 @@ public class FileLogger implements GnssListener {
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyy_MM_dd_HH_mm_ss");
             Date now = new Date();
-
-            String gpsFileName = String.format("%s_gps_%s.txt", FILE_PREFIX, formatter.format(now));
-            File currentGpsFile = new File(baseDirectory, gpsFileName);
-            String currentFilePath = currentGpsFile.getAbsolutePath();
+            String fileName = String.format("%s_log_%s.txt", FILE_PREFIX, formatter.format(now));
+            File currentFile = new File(baseDirectory, fileName);
+            String currentFilePath = currentFile.getAbsolutePath();
             BufferedWriter currentFileWriter;
-
-            String imuFileName = String.format("%s_imu_%s.txt", FILE_PREFIX, formatter.format(now));
-            File currentImuFile = new File(baseDirectory, imuFileName);
-            String currentImuFilePath = currentImuFile.getAbsolutePath();
-            BufferedWriter currentImuFileWriter;
-
-
-
             try {
-                currentFileWriter = new BufferedWriter(new FileWriter(currentGpsFile));
+                currentFileWriter = new BufferedWriter(new FileWriter(currentFile));
             } catch (IOException e) {
                 logException("Could not open file: " + currentFilePath, e);
                 return;
@@ -179,8 +166,8 @@ public class FileLogger implements GnssListener {
                 }
             }
 
-
-
+            mFile = currentFile;
+            mFileWriter = currentFileWriter;
             Toast.makeText(mContext, "File opened: " + currentFilePath, Toast.LENGTH_SHORT).show();
 
             // To make sure that files do not fill up the external storage:
@@ -199,14 +186,6 @@ public class FileLogger implements GnssListener {
                 }
             }
         }
-    }
-
-    private void startNewGpsLog(){
-
-    }
-
-    private void startNewSensorLog(){
-
     }
 
     /**
@@ -337,11 +316,7 @@ public class FileLogger implements GnssListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        synchronized (mFileLock) {
-            if (mFileWriter == null) {
-                return;
-            }
-        }
+
     }
 
     @Override

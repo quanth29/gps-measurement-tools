@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GnssContainer mGnssContainer;
     private UiLogger mUiLogger;
-    private FileLogger mFileLogger;
+    private NewFileLogger mFileLogger;
     private Fragment[] mFragments;
 
     @Override
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupFragments() {
         mUiLogger = new UiLogger();
-        mFileLogger = new FileLogger(getApplicationContext());
+        mFileLogger = new NewFileLogger(getApplicationContext());
         mGnssContainer = new GnssContainer(getApplicationContext(), mUiLogger, mFileLogger);
         mFragments = new Fragment[NUMBER_OF_FRAGMENTS];
         SettingsFragment settingsFragment = new SettingsFragment();
